@@ -117,6 +117,7 @@ ifneq ($(CONFIG_PACKAGE_pcap-dnsproxy_advancedoptions),)
 endif
 
 define Package/pcap-dnsproxy/conffiles
+/etc/config/pcap-dnsproxy
 /etc/pcap-dnsproxy/Config.conf
 /etc/pcap-dnsproxy/Hosts.conf
 /etc/pcap-dnsproxy/IPFilter.conf
