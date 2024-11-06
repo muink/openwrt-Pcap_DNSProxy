@@ -18,6 +18,15 @@ CONFDIR=/etc/pcap-dnsproxy
 HOTPLUGFILE=/tmp/pcap-dnsproxy.hotplug
 ERRLOG=/tmp/pcap-dnsproxy-error.log
 
+# thanks to homeproxy
+# we don't know which is the default server, just take the first one
+DNSMASQ_UCI_CONFIG="$(uci -q show "dhcp.@dnsmasq[0]" | awk 'NR==1 {split($0, conf, /[.=]/); print conf[2]}')"
+if [ -f "/tmp/etc/dnsmasq.conf.$DNSMASQ_UCI_CONFIG" ]; then
+	DNSMASQ_DIR="$(awk -F '=' '/^conf-dir=/ {print $2}' "/tmp/etc/dnsmasq.conf.$DNSMASQ_UCI_CONFIG")"
+else
+	DNSMASQ_DIR="/tmp/dnsmasq.d"
+fi
+
 config_load "pcap-dnsproxy"
 
 parse_pcap_dnsproxy()
@@ -63,11 +72,11 @@ start_service() {
 		# create hotplug mark, it will update the last-modified date if the file exists
 		touch $HOTPLUGFILE
 		# create dnsmasq conf, take over system dns
-		mkdir -p /tmp/dnsmasq.d 2>/dev/null
+		mkdir -p $DNSMASQ_DIR 2>/dev/null
 		local ports="$(sed -En '/^Listen Port =/{s|.+=\s*(\S*)\s*|\1|p}' $CONFDIR/Config.conf)"
 		if [ -n "$ports" ]; then
 			local servers="$(echo $ports | sed -e 's/|/\nserver=127.0.0.1#/g' -e 's|^|server=127.0.0.1#|')"
-			cat <<-EOF > /tmp/dnsmasq.d/pcap-dnsproxy.conf
+			cat <<-EOF > $DNSMASQ_DIR/pcap-dnsproxy.conf
 				no-poll
 				no-resolv
 				$servers
@@ -85,7 +94,7 @@ start_service() {
 
 stop_service() {
 	rm -rf "/tmp/pcap_dnsproxy_fifo"
-	rm -f "/tmp/dnsmasq.d/pcap-dnsproxy.conf"
+	rm -f "$DNSMASQ_DIR/pcap-dnsproxy.conf"
 }
 
 service_triggers() {
