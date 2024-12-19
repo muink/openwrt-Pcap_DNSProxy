@@ -1,9 +1,8 @@
+# SPDX-License-Identifier: GPL-2.0
 #
+# Copyright (C) 2020-2024 muink <https://github.com/muink>
 # Copyright (C) 2015-2018 wongsyrone
-#
-# This is free software, licensed under the GNU General Public License v3.
-# See /LICENSE for more information.
-#
+
 include $(TOPDIR)/rules.mk
 
 PKG_NAME:=pcap-dnsproxy
