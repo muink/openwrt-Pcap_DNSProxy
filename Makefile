@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: GPL-2.0
 #
-# Copyright (C) 2020-2024 muink <https://github.com/muink>
+# Copyright (C) 2020-2025 muink <https://github.com/muink>
 # Copyright (C) 2015-2018 wongsyrone
 
 include $(TOPDIR)/rules.mk
@@ -16,8 +16,9 @@ PKG_SOURCE_URL:=https://github.com/muink/Pcap_DNSProxy.git
 PKG_SOURCE_VERSION:=$(PKG_UPSTREAM_GITHASH)
 PKG_MIRROR_HASH:=392d060ae8c51ffbbb638c9462ef003f46ec19e15a803d4ea30f159851bb2a54
 
-PKG_SOURCE:=$(PKG_NAME)-$(PKG_UPSTREAM_VERSION)-$(PKG_SOURCE_VERSION).tar.gz
 PKG_SOURCE_SUBDIR:=$(PKG_NAME)-$(PKG_UPSTREAM_VERSION)
+PKG_SOURCE:=$(PKG_SOURCE_SUBDIR)-$(PKG_SOURCE_VERSION).tar.gz
+
 PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_SOURCE_SUBDIR)
 
 PKG_LICENSE:=GPL-2.0
